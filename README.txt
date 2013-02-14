@@ -39,7 +39,19 @@ A common attribute can be similarly added as well.
 Here is an example format from (examples/state-machine.txt) that omits
 the 'name' attribute since it is common to all elements.
 
-.pull examples/state-machine.txt,code
+
+    machine Turnstile
+      state Locked
+          event coin
+              action "set Unlocked"
+          event pass
+              action "sound alarm"
+
+      state Unlocked
+          event coin
+              action "refund coin"
+          event pass
+              action "set Locked"
 
 ### Usage
 
@@ -54,7 +66,25 @@ The command
 Generates the corresponding xml for the file and adds the missing attribute name
 as seen in the output:
 
-.pull examples/state-machine.xml,code
+
+    &lt;machine name = "Turnstile">
+      &lt;state name = "Locked">
+          &lt;event name = "coin">
+              &lt;action name = "set Unlocked"/>
+          &lt;/event>
+          &lt;event name = "pass">
+              &lt;action name = "sound alarm"/>
+          &lt;/event>
+      &lt;/state>
+      &lt;state name = "Unlocked">
+          &lt;event name = "coin">
+              &lt;action name = "refund coin"/>
+          &lt;/event>
+          &lt;event name = "pass">
+              &lt;action name = "set Locked"/>
+          &lt;/event>
+      &lt;/state>
+    &lt;/machine>
 
 ### Installation
 
@@ -78,10 +108,10 @@ or specifying an exclusion set of tags {a, b, c} to which the command will not a
 
 Also, useful is the ability to add text. This would be simple to implement as a here doc.
 
-  tag attr1 value1 <<TEXT
-  Text content line 1
-  Text content line 2
-  TEXT
+    tag attr1 value1 <<TEXT
+    Text content line 1
+    Text content line 2
+    TEXT
 
 
 ### Author
