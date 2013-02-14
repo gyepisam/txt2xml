@@ -41,20 +41,21 @@ A common attribute can be similarly added as well.
 Here is an example format from (examples/state-machine.txt) that omits
 the 'name' attribute since it is common to all elements.
 
+
     machine Turnstile
       state Locked
           event coin
               action "set Unlocked"
           event pass
               action "sound alarm"
-    
+
       state Unlocked
           event coin
               action "refund coin"
           event pass
               action "set Locked"
 
-<A name="toc3-45" title="Usage" />
+<A name="toc3-57" title="Usage" />
 ### Usage
 
     Usage: ./txt2xml [-tag=TAG] [attribute=ATTRIBUTE] [FILE]
@@ -66,7 +67,7 @@ the 'name' attribute since it is common to all elements.
     With no FILE, reads standard input.
     Report bugs to self-github@gyepi.com.
 
-<A name="toc3-50" title="Usage Example" />
+<A name="toc3-62" title="Usage Example" />
 ### Usage Example
 
 The command
@@ -76,33 +77,34 @@ The command
 Generates the corresponding xml for the file and adds the missing attribute name
 as seen in the output:
 
-    <machine name = "Turnstile">
-      <state name = "Locked">
-          <event name = "coin">
-              <action name = "set Unlocked"/>
-          </event>
-          <event name = "pass">
-              <action name = "sound alarm"/>
-          </event>
-      </state>
-      <state name = "Unlocked">
-          <event name = "coin">
-              <action name = "refund coin"/>
-          </event>
-          <event name = "pass">
-              <action name = "set Locked"/>
-          </event>
-      </state>
-    </machine>
 
-<A name="toc3-62" title="Installation" />
+    &lt;machine name = "Turnstile">
+      &lt;state name = "Locked">
+          &lt;event name = "coin">
+              &lt;action name = "set Unlocked"/>
+          &lt;/event>
+          &lt;event name = "pass">
+              &lt;action name = "sound alarm"/>
+          &lt;/event>
+      &lt;/state>
+      &lt;state name = "Unlocked">
+          &lt;event name = "coin">
+              &lt;action name = "refund coin"/>
+          &lt;/event>
+          &lt;event name = "pass">
+              &lt;action name = "set Locked"/>
+          &lt;/event>
+      &lt;/state>
+    &lt;/machine>
+
+<A name="toc3-92" title="Installation" />
 ### Installation
 
 txt2xml can be installed using the `make install` command or by copying the script
 to your favorite path location. By default, `make install` acts like `make DESTDIR=/usr/local/bin install`.
 Specify DESTDIR, with a different value if desired.
 
-<A name="toc3-69" title="Dependencies" />
+<A name="toc3-99" title="Dependencies" />
 ### Dependencies
 
 txt2xml is a Perl program and requires the perl interpreter. There are no unusual construct
@@ -111,7 +113,7 @@ so the code should run fine on most extant versions of perl.
 If you want to hack on the code, you'll need to install [GSL] (imatix/gsl) in order to add tests
 and [gitdown] (/imatix/gitdown) in order to generate documentation in markdown format.
 
-<A name="toc3-78" title="Future Work" />
+<A name="toc3-108" title="Future Work" />
 ### Future Work
 
 I think it would be useful to specify the --tag command in a more discriminating
@@ -120,13 +122,13 @@ or specifying an exclusion set of tags {a, b, c} to which the command will not a
 
 Also, useful is the ability to add text. This would be simple to implement as a here doc.
 
-  tag attr1 value1 <<TEXT
-  Text content line 1
-  Text content line 2
-  TEXT
+    tag attr1 value1 <<TEXT
+    Text content line 1
+    Text content line 2
+    TEXT
 
 
-<A name="toc3-93" title="Author" />
+<A name="toc3-123" title="Author" />
 ### Author
 
 This tool is written and maintained by Gyepi Sam <self-github@gyepi.com>.
