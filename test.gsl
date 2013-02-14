@@ -1,0 +1,42 @@
+.for test
+o=`tempfile -p out-`
+e=`tempfile -p err-`
+. expected = ->expected.?
+perl txt2xml $(.args?) << EOS > $o 2> $e
+$(->input)
+EOS
+.if type = 'pass'
+if [ "$?" != "0" ] ; then
+    cat <<EOS
+unexpected failure! on input
+$(->input.)
+expected:
+$(expected)
+got:
+EOS
+cat $e
+else
+     cmp -s - $o <<EOS
+$(expected)
+EOS
+fi
+
+if [ "$?" != "0" ] ; then
+  cat <<EOS
+fail! expected:
+$(expected)
+got:
+EOS
+  cat $o
+fi
+.elsif type = 'fail'
+if [ "$?" = "0" ] ; then
+cat <<EOS
+unexpected success on input
+$(->input)
+EOS
+fi
+.endif
+rm -f $o $e
+
+.endfor

@@ -1,0 +1,118 @@
+<schema>
+    <domains>
+     <domain name = "name" data_type = "char" size = "75"/>
+     <domain name = "address1" data_type = "char" size = "75"/>
+     <domain name = "address2" data_type = "char" size = "75"/>
+     <domain name = "city" data_type = "char" size = "50"/>
+     <domain name = "phone" data_type = "char" size = "15"/>
+     <domain name = "zipcode" data_type = "char" size = "5"/>
+     <domain name = "boolean" data_type = "tinyint"/>
+     <domain name = "date" data_type = "date"/>
+     <domain name = "currency" data_type = "numeric" size = "10" scale = "2"/>
+    </domains>
+    <!-- nb: roles are membership and security. may need a discriminator field. -->
+    <enum enum_roles = "data_type" char = "size" 15 = "">
+      <data member = "Member"/>
+      <data collator = "Collator"/>
+      <data admin = "Administrator"/>
+      <data tech_admin = "Technical Administrator"/>
+      <data root = "Super User"/>
+    </enum>
+    <enum enum_states = "data_type" char = "size" 2 = ""/>
+    <table person = "">
+       <column name = "first_name" index = "true" domain = "name"/>
+       <column name = "last_name" index = "true" domain = "name"/>
+       <column name = "address1"/>
+       <column name = "address2"/>
+       <column name = "city"/>
+       <column name = "state" enum = "enum_states"/>
+       <column name = "zipcode"/>
+       <column name = "phone"/>
+       <column name = "email" index = "true" data_type = "char" size = "50"/>
+       <column name = "login" index = "true" data_type = "char" size = "16"/>
+       <column name = "password" data_type = "char" size = "32"/>
+    </table>
+    <table club = "">
+       <column name = "name" name = ""/>
+       <column name = "address1"/>
+       <column name = "address2"/>
+       <column name = "city"/>
+       <column name = "state" enum = "enum_states"/>
+       <column name = "zipcode"/>
+       <column name = "phone"/>
+       <column name = "index:" name = "address1" address2 = ""/>
+    </table>
+    <table roles = "">
+       <column name = "person_id"/>
+       <column name = "role_name" enum = "enum_roles"/>
+    </table>
+    <table club_member = "">
+       <column name = "club_id"/>
+       <column name = "person_id"/>
+       <column name = "role_name" enum = "enum_roles"/>
+       <column name = "join_date"/>
+       <column name = "leave_date"/>
+       <column name = "is_active"/>
+    </table>
+    <table warehouse = "">
+       <column name = "warehouse" data_type = "char" size = "25"/>
+       <column name = "city"/>
+       <column name = "state" enum = "enum_states"/>
+    </table>
+    <table catalog = "">
+       <column name = "start_date"/>
+       <column name = "end_date"/>
+       <column name = "fetch_date"/>
+       <column name = "record_count"/>
+       <column name = "is_open"/>
+       <column name = "supersedes_catalog_id"/>
+       <column name = "warehouse_id"/>
+    </table>
+    <table catalog_detail = "">
+       <column name = "catalog_id"/>
+       <column name = "sku" data_type = "char" size = "6" index = "true"/>
+       <column name = "quantitytype" data_type = "char" size = "2"/>
+       <column name = "quantity" data_type = "char" size = "8"/>
+       <column name = "brand" data_type = "char" size = "6" index = "true"/>
+       <column name = "description" data_type = "char" size = "28" index = "true"/>
+       <column name = "caseprice" domain = "currency"/>
+       <column name = "unitprice" domain = "currency"/>
+       <column name = "minorder" data_type = "int"/>
+       <column name = "weight" data_type = "int"/>
+       <column name = "category" data_type = "char" size = "6" index = "true"/>
+       <column name = "tax" data_type = "char" size = "2"/>
+       <column name = "randomweight" data_type = "char" size = "1"/>
+       <column name = "special" data_type = "char" size = "1" index = "true"/>
+       <column name = "volumediscount" data_type = "char" size = "1"/>
+       <column name = "organic" data_type = "char" size = "1" index = "true"/>
+       <column name = "minrequired" data_type = "char" size = "6"/>
+    </table>
+    <table order = "">
+       <column name = "person_id"/>
+       <column name = "catalog_id"/>
+       <column name = "subtotal_amount"/>
+       <column name = "tax_amount"/>
+       <column name = "total_amount"/>
+       <column name = "item_count"/>
+       <column name = "create_date" index = "true"/>
+       <column name = "is_open"/>
+    </table>
+    <table order_detail = "">
+       <column name = "order_id"/>
+       <column name = "catalog_detail_id"/>
+       <column name = "quantity_desired" data_type = "int"/>
+       <column name = "quantity_extra_accept" data_type = "int"/>
+       <column name = "is_partial_quantity"/>
+    </table>
+    <table item_splits = "">
+       <column name = "catalog_detail_id"/>
+       <column name = "total_quantity" data_type = "int"/>
+       <column name = "total_quantity_available" data_type = "int"/>
+       <column name = "total_quantity_assigned" data_type = "int"/>
+    </table>
+    <table item_splits_detail = "">
+       <column name = "item_splits_detail_id"/>
+       <column name = "order_detail_id"/>
+       <column name = "quantity_assigned" data_type = "int"/>
+    </table>
+</schema>

@@ -1,0 +1,18 @@
+<machine name = "Turnstile">
+  <state name = "Locked">
+      <event name = "coin">
+          <action name = "set Unlocked"/>
+      </event>
+      <event name = "pass">
+          <action name = "sound alarm"/>
+      </event>
+  </state>
+  <state name = "Unlocked">
+      <event name = "coin">
+          <action name = "refund coin"/>
+      </event>
+      <event name = "pass">
+          <action name = "set Locked"/>
+      </event>
+  </state>
+</machine>

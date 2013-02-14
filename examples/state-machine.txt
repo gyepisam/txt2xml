@@ -1,0 +1,12 @@
+machine Turnstile
+  state Locked
+      event coin
+          action "set Unlocked"
+      event pass
+          action "sound alarm"
+
+  state Unlocked
+      event coin
+          action "refund coin"
+      event pass
+          action "set Locked"

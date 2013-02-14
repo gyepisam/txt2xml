@@ -1,0 +1,153 @@
+#!/usr/bin/perl
+
+use strict;
+use Getopt::Long;
+
+my $default_tag;
+my $first_attr;
+my $help;
+
+GetOptions("tag|t=s" => \$default_tag, "attribute|attr|a=s" => \$first_attr, 'help|h|?' => \$help);
+
+if ($help) {
+    warn <<EOS;
+Usage: $0 [-tag=TAG] [attribute=ATTRIBUTE] [FILE]
+Converts text read from FILE(s), or standard input, to XML.
+-t --tag TAG       Use TAG as element tag for each element.
+-a --attribute     Use ATTRIBUTE as the first attribute for each element.
+-h -? --help       Show this help output.
+
+With no FILE, reads standard input.
+Report bugs to self-github\@gyepi.com.
+EOS
+    exit(0);
+}
+
+our ($tree, $top);
+
+$top = $tree = { indent => -1, type => 'root' };
+
+my @quotes = qw(" ');
+
+while (<>)
+{
+  chomp;
+  next unless /\S/;
+
+  my $indent = 0;
+  $indent++ while s/^\s//;
+
+  if (/^#+\s*(.+)/) {
+    push_element ($indent, '', ['content', $1 ], 'comment');
+  }
+  else {
+    my @words;
+
+    LOOP:
+    while ($_) {
+      # quoted string, possibly with embedded quote
+      for my $quote (@quotes) {
+        my $re = qr{$quote((?:(?:\\$quote)|[^$quote])*)$quote};
+        if (m/\G\s*$re/gc) {
+          push @words, $1;
+          next LOOP;   
+        }
+      }
+
+      # equal sign
+      if (/\G\s*=/gc) {
+        if (@words and @words % 2 == 0) {
+          next LOOP;
+        }
+        else {
+          die sprintf "syntax error. [=] must occur between a name and a value. at input: = %s.\n", substr($_, pos());
+        }
+      }
+
+      # any other word, possibly with a backslashed equal sign. 
+      if (/\G\s*((?:\\=|[^= \t])+)/gc) {
+        push @words, $1;
+        next LOOP;
+      }
+
+      if (/\G\s*\S/) {
+        die sprintf "cannot match %s\n", substr($_, pos());
+      }
+
+      last;
+    }
+
+    my $tag = $default_tag ? $default_tag : shift @words;
+
+    unshift @words, $first_attr if $first_attr;
+
+    push_element ($indent, $tag, \@words, 'element');
+
+  }
+}
+
+print_elements($tree);
+
+sub push_element {
+  my ($indent, $tag, $attrs, $type) = @_;
+
+  my $element = { indent => $indent, tag => $tag, attrs => $attrs, type => $type };
+
+  $top = $top->{parent} while $top->{indent} >= $indent;
+
+  $element->{parent} = $top;
+  push @{$top->{children}}, $element;
+
+  $top = $element;
+}
+
+sub do_quote {
+  my ($value, $quotes) = @_;
+    
+  # quote map is array to maintain order
+  # which avoids double quoting
+  for (my $i = 0; $i < @$quotes; $i += 2) {
+    $value =~ s/$quotes->[$i]/$quotes->[$i+1]/g;
+  }
+
+  $value;
+}
+
+sub quote_value { do_quote($_[0],  ['&', '&amp;', '"', '&quot;']) } #&amp; should be first.
+sub quote_text { do_quote($_[0], ['<', '&lt;', '>', '&gt']) }
+
+sub print_elements {
+  my $element = shift;
+
+  my ($indent, $tag, $attrs, $children, $type) = @{$element}{qw(indent tag attrs children type)};
+
+  my $pre = ' ' x $indent;
+
+  if ($type eq 'root') {
+    print_elements($_) for @$children;
+  }
+  elsif ($type eq 'element') {
+
+    print "$pre<$tag";
+    if (@$attrs) {
+      for (my $i = 0; $i < @$attrs; $i += 2) {
+        printf q{ %s = "%s"}, $attrs->[$i], quote_value($attrs->[$i + 1]);
+      }
+    }
+
+    if (defined $children) {
+      print ">\n";
+      print_elements($_) for @$children;
+      print "$pre</$tag>\n";
+    }
+    else {
+      print "/>\n";
+    }
+  }
+  elsif ($type eq 'text') {
+    print quote_text($attrs->[1]);
+  }
+  elsif ($type eq 'comment') {
+    printf qq{$pre<!-- %s -->\n}, quote_text($attrs->[1]);
+  }
+}
