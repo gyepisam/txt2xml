@@ -41,30 +41,30 @@ A common attribute can be similarly added as well.
 Here is an example format from (examples/state-machine.txt) that omits
 the 'name' attribute since it is common to all elements.
 
-machine Turnstile
-  state Locked
-      event coin
-          action "set Unlocked"
-      event pass
-          action "sound alarm"
-
-  state Unlocked
-      event coin
-          action "refund coin"
-      event pass
-          action "set Locked"
+    machine Turnstile
+      state Locked
+          event coin
+              action "set Unlocked"
+          event pass
+              action "sound alarm"
+    
+      state Unlocked
+          event coin
+              action "refund coin"
+          event pass
+              action "set Locked"
 
 <A name="toc3-45" title="Usage" />
 ### Usage
 
-Usage: ./txt2xml [-tag=TAG] [attribute=ATTRIBUTE] [FILE]
-Converts text read from FILE(s), or standard input, to XML.
--t --tag TAG       Use TAG as element tag for each element.
--a --attribute     Use ATTRIBUTE as the first attribute for each element.
--h -? --help       Show this help output.
-
-With no FILE, reads standard input.
-Report bugs to self-github@gyepi.com.
+    Usage: ./txt2xml [-tag=TAG] [attribute=ATTRIBUTE] [FILE]
+    Converts text read from FILE(s), or standard input, to XML.
+    -t --tag TAG       Use TAG as element tag for each element.
+    -a --attribute     Use ATTRIBUTE as the first attribute for each element.
+    -h -? --help       Show this help output.
+    
+    With no FILE, reads standard input.
+    Report bugs to self-github@gyepi.com.
 
 <A name="toc3-50" title="Usage Example" />
 ### Usage Example
@@ -76,24 +76,24 @@ The command
 Generates the corresponding xml for the file and adds the missing attribute name
 as seen in the output:
 
-<machine name = "Turnstile">
-  <state name = "Locked">
-      <event name = "coin">
-          <action name = "set Unlocked"/>
-      </event>
-      <event name = "pass">
-          <action name = "sound alarm"/>
-      </event>
-  </state>
-  <state name = "Unlocked">
-      <event name = "coin">
-          <action name = "refund coin"/>
-      </event>
-      <event name = "pass">
-          <action name = "set Locked"/>
-      </event>
-  </state>
-</machine>
+    <machine name = "Turnstile">
+      <state name = "Locked">
+          <event name = "coin">
+              <action name = "set Unlocked"/>
+          </event>
+          <event name = "pass">
+              <action name = "sound alarm"/>
+          </event>
+      </state>
+      <state name = "Unlocked">
+          <event name = "coin">
+              <action name = "refund coin"/>
+          </event>
+          <event name = "pass">
+              <action name = "set Locked"/>
+          </event>
+      </state>
+    </machine>
 
 <A name="toc3-62" title="Installation" />
 ### Installation

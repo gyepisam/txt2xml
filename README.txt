@@ -39,11 +39,11 @@ A common attribute can be similarly added as well.
 Here is an example format from (examples/state-machine.txt) that omits
 the 'name' attribute since it is common to all elements.
 
-.pull examples/state-machine.txt
+.pull examples/state-machine.txt,code
 
 ### Usage
 
-.pull usage.txt
+.pull usage.txt,code
 
 ### Usage Example
 
@@ -54,7 +54,7 @@ The command
 Generates the corresponding xml for the file and adds the missing attribute name
 as seen in the output:
 
-.pull examples/state-machine.xml
+.pull examples/state-machine.xml,code
 
 ### Installation
 
